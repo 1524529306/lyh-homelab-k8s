@@ -189,7 +189,7 @@ EOF
 sudo apt update
 ```
 
-### 4.2 Docker(正确姿势,含全部坑)
+### 4.2 Docker(安装步骤/已踩的坑)
 完整脚本见 [`scripts/install-docker.sh`](scripts/install-docker.sh),核心步骤:
 ```bash
 # 工具
@@ -226,6 +226,10 @@ docker run --rm hello-world    # 必须看到完整 Hello from Docker! 段落
 ### 4.3 快照节奏
 ```
 00-fresh  装完 Ubuntu 24.04 后立刻拍(关机态,最小)
-01-docker Docker 验证通过后拍
-02-k3s    k3s Ready 后拍
+01-init   系统已安装、用户lyh、密码******
+02-docker IP nat 192.168.211.128 
+          curl wget net-tool 工具安装 
+          docker 安装
+后续规划...
+03-k3s    k3s Ready
 ```
