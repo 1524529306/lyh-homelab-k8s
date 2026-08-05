@@ -3,30 +3,25 @@
 > 本地 K8s + 可观测性 + CI/CD 实验台。转型规划的 Phase 1–3 硬证据仓库。
 > 用途:简历「项目经验」栏的实打实内容——证明你真上手过容器编排、监控、流水线,不依赖公司平台。
 
-## 实验环境(2026-08-04 确定)
-- **宿主机**:Windows + VMware
-- **实验机**:VMware 里一台 Ubuntu 22.04 虚拟机(2C4G 起,能跑多节点就 4C8G)
-- **运行时**:Docker Engine + k3s(或 kind)在 Ubuntu 内运行
+## 目录
+- 📄 **Phase 0 实录(环境搭建 + 踩坑 + 原理)**:[docs/Phase0-环境搭建与踩坑实录.md](docs/Phase0-环境搭建与踩坑实录.md)
+- 🔧 **Docker 一键安装脚本(国内镜像)**:[scripts/install-docker.sh](scripts/install-docker.sh)
 
-### 环境准备命令(Ubuntu 22.04 虚拟机内执行)
+## 实验环境(2026-08-05 落地,以实测为准)
+- **宿主机**:Windows + VMware Workstation Pro
+- **实验机**:VMware 内一台 **Ubuntu 24.04 LTS Desktop** 虚拟机(4C4G,40GB 瘦置备)
+- **网络**:VMware NAT(vmnet8);VM 内网 IP(主机可 SSH,`lyh` 用户 + sudo,不启 root 直登)
+- **运行时**:Docker Engine 29.x + 待装 k3s(或 kind)
+
+### 环境准备(推荐用脚本,已含全部踩坑处理)
 ```bash
-# 1. 安装 Docker
-sudo apt-get update
-sudo apt-get install -y docker.io
-sudo systemctl enable --now docker
-sudo usermod -aG docker $USER   # 退出重登生效
-docker run hello-world          # 出 Hello from Docker 即成功
-
-# 2. 装 k3s(单节点,最轻量)
+bash scripts/install-docker.sh          # 一键装 Docker + 配置 daocloud 镜像源
+# 装 k3s(单节点,最轻量)
 curl -sfL https://get.k3s.io | sh -
-# 多节点可加 WORKER 节点,先单节点练手
-sudo k3s kubectl get node       # 看到 Ready 即成功
-
-# 备选:用 kind(纯容器跑 K8s,适合只练 kubectl)
-# curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
-# chmod +x ./kind && sudo mv ./kind /usr/local/bin/
-# kind create cluster --name homelab
+sudo k3s kubectl get node               # 看到 Ready 即成功
 ```
+
+> 老环境准备命令(22.04 + docker.io)仅作历史参考,新装机器一律走脚本。
 
 ## 阶段计划
 ### Phase 1|K8s 核心(目标:CKA)
