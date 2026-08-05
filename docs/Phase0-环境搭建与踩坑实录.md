@@ -165,7 +165,7 @@ sudo usermod -aG docker $USER
 3. 读数据时:先查 delta,没命中再读 base;
 4. **回滚 = 丢弃 delta**,状态回到快照时刻;删除快照 = 把 delta 合并回 base。
 
-**应用**:装机前拍 `00-fresh`,装 Docker 后拍 `01-docker`,装 k3s 后拍 `02-k3s`——任何一步翻车,秒级回滚。
+**应用**:装机前拍 `00-fresh`,装系统后拍 `01-init`,装docker后拍 `02-docker`——任何一步翻车,秒级回滚。
 
 ---
 
