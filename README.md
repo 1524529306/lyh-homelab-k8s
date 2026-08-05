@@ -1,27 +1,25 @@
 # homelab-k8s
 
-> 本地 K8s + 可观测性 + CI/CD 实验台。转型规划的 Phase 1–3 硬证据仓库。
-> 用途:简历「项目经验」栏的实打实内容——证明你真上手过容器编排、监控、流水线,不依赖公司平台。
+> 本地 K8s + 可观测性 + CI/CD 实验台。
+> 包含:从裸机环境(Docker)到 K8s 集群再到监控自动化的全部可复现材料。
 
 ## 目录
-- 📄 **Phase 0 实录(环境搭建 + 踩坑 + 原理)**:[docs/Phase0-环境搭建与踩坑实录.md](docs/Phase0-环境搭建与踩坑实录.md)
+- 📄 **Phase 0 环境搭建实录(踩坑 + 原理)**:[docs/Phase0-环境搭建与踩坑实录.md](docs/Phase0-环境搭建与踩坑实录.md)
 - 🔧 **Docker 一键安装脚本(国内镜像)**:[scripts/install-docker.sh](scripts/install-docker.sh)
 
-## 实验环境(2026-08-05 落地,以实测为准)
+## 实验环境
 - **宿主机**:Windows + VMware Workstation Pro
 - **实验机**:VMware 内一台 **Ubuntu 24.04 LTS Desktop** 虚拟机(4C4G,40GB 瘦置备)
-- **网络**:VMware NAT(vmnet8);VM 内网 IP(主机可 SSH,`lyh` 用户 + sudo,不启 root 直登)
+- **网络**:VMware NAT(vmnet8);主机 SSH 进 VM,普通用户 + sudo,不启 root 直登
 - **运行时**:Docker Engine 29.x + 待装 k3s(或 kind)
 
-### 环境准备(推荐用脚本,已含全部踩坑处理)
+### 环境准备(推荐用脚本)
 ```bash
 bash scripts/install-docker.sh          # 一键装 Docker + 配置 daocloud 镜像源
 # 装 k3s(单节点,最轻量)
 curl -sfL https://get.k3s.io | sh -
 sudo k3s kubectl get node               # 看到 Ready 即成功
 ```
-
-> 老环境准备命令(22.04 + docker.io)仅作历史参考,新装机器一律走脚本。
 
 ## 阶段计划
 ### Phase 1|K8s 核心(目标:CKA)
