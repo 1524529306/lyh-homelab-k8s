@@ -1,8 +1,8 @@
 # Phase 0 环境搭建实录
 
-> VMware 内 Ubuntu 24.04 LTS 实验机:从裸机到 Docker 可用的全过程。
+> VMware 内 Ubuntu 22.04 LTS 实验机:从裸机到 Docker 可用的全过程。
 > 内容:每一步做了什么、踩了哪些坑、怎么解决、背后的原理。
-> 适用:任何想在 Ubuntu 24.04 上跑 Docker / K8s 学习的人。
+> 适用:任何想在 Ubuntu 22.04 上跑 Docker / K8s 学习的人。
 
 ---
 
@@ -11,7 +11,7 @@
 | 项 | 值 |
 |---|---|
 | 宿主机 | Windows,VMware Workstation Pro |
-| 虚拟机 | Ubuntu 24.04 LTS Desktop(amd64) |
+| 虚拟机 | Ubuntu 22.04 LTS Desktop(amd64) |
 | VM 配置 | 4 vCPU / 4GB RAM / 40GB 瘦置备(thin provision) |
 | 网络 | VMware NAT(vmnet8) |
 | 远程 | SSH(主机 → VM,普通用户 + sudo,不启用 root 直登) |
@@ -25,13 +25,14 @@
 
 ## 2. 完成清单
 
-- [x] VMware 内 Ubuntu 24.04 Desktop 安装完成
+- [x] VMware 内 Ubuntu 22.04 Desktop 安装完成
 - [x] 虚拟机磁盘采用瘦置备(thin)
 - [x] 修复 VMware 虚拟网络(vmnet8 NAT 恢复正常)
 - [x] 主机经 SSH 直连 VM(普通用户)
 - [x] Ubuntu 软件源切换为阿里云镜像
 - [x] Docker Engine 29.x 安装并验证(`hello-world` 出真实输出)
 - [x] Docker 镜像源配置为 daocloud(国内镜像)
+- [x] GitHub 本地提交并推送成功(代理 + PAT 认证,见 §3.1)
 - [ ] (下一步)安装 k3s / kind,进 Phase 1
 
 ---
@@ -56,11 +57,11 @@ git config --global https.proxy http://127.0.0.1:7890
 
 ---
 
-### 3.2 Ubuntu 24.04 的源是 deb822 新格式
+### 3.2 Ubuntu 22.04 的源格式说明
 
-**现象**:网上教程让你改 `/etc/apt/sources.list`,但 24.04 里这个文件只有一行注释。
+**现象**:Ubuntu 22.04 默认仍是传统单行格式 `/etc/apt/sources.list`;deb822 格式(`ubuntu.sources`)从 22.10 起才成为默认,但 22.04 同样支持。
 
-**原因**:Ubuntu 22.10 起,软件源从"单行格式"迁移到 **deb822 格式**,存放在:
+**原因**:Debian/Ubuntu 的软件源有两种写法——"单行格式"(legacy)和"deb822 格式"。22.04 默认用单行格式;下面脚本用 deb822 也兼容,存放在：
 ```
 /etc/apt/sources.list.d/ubuntu.sources
 ```
@@ -171,18 +172,18 @@ sudo usermod -aG docker $USER
 
 ## 4. 标准操作速查(可直接复用)
 
-### 4.1 源(阿里云,Ubuntu 24.04 deb822 格式)
+### 4.1 源(阿里云,Ubuntu 22.04 deb822 格式)
 ```bash
 sudo tee /etc/apt/sources.list.d/ubuntu.sources <<'EOF'
 Types: deb
 URIs: http://mirrors.aliyun.com/ubuntu/
-Suites: noble noble-updates noble-backports
+Suites: jammy jammy-updates jammy-backports
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
 Types: deb
 URIs: http://mirrors.aliyun.com/ubuntu/
-Suites: noble-security
+Suites: jammy-security
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 EOF
@@ -202,7 +203,7 @@ curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg \
   | sudo gpg --batch --yes --dearmor -o /etc/apt/keyrings/docker.gpg
 
 # 源
-echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://mirrors.aliyun.com/docker-ce/linux/ubuntu noble stable" \
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://mirrors.aliyun.com/docker-ce/linux/ubuntu jammy stable" \
   | sudo tee /etc/apt/sources.list.d/docker.list
 sudo apt update
 
@@ -225,7 +226,7 @@ docker run --rm hello-world    # 必须看到完整 Hello from Docker! 段落
 
 ### 4.3 快照节奏
 ```
-00-fresh  装完 Ubuntu 24.04 后立刻拍(关机态,最小)
+00-fresh  装完 Ubuntu 22.04 后立刻拍(关机态,最小)
 01-init   系统已安装、用户lyh、密码******
 02-docker IP nat 192.168.211.128 
           curl wget net-tool 工具安装 

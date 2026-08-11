@@ -1,0 +1,13 @@
+mirrors:
+  docker.io:
+    endpoint:
+      - "https://docker.m.daocloud.io"
+  quay.io:
+    endpoint:
+      - "https://docker.m.daocloud.io"
+  registry.k8s.io:
+    endpoint:
+      - "https://docker.m.daocloud.io"
+  ghcr.io:
+    endpoint:
+      - "https://docker.m.daocloud.io"

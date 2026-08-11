@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ============================================================
-# install-docker.sh — Ubuntu 24.04 一键安装 Docker(国内镜像)
-# 适用:VMware/裸机 Ubuntu 24.04 LTS Desktop/Server amd64
+# install-docker.sh — Ubuntu 22.04 一键安装 Docker(国内镜像)
+# 适用:VMware/裸机 Ubuntu 22.04 LTS Desktop/Server amd64
 # 用法:bash install-docker.sh
 #
 # 思路(线性 5 步,每步独立可验证):
@@ -20,17 +20,17 @@ sudo apt install -y openssh-server
 sudo systemctl enable --now ssh
 
 # ---------- [2] 切换阿里云源 ----------
-echo "[2/5] 切换为阿里云镜像源(deb822 格式, Ubuntu 24.04)..."
+echo "[2/5] 切换为阿里云镜像源(deb822 格式, Ubuntu 22.04)..."
 sudo tee /etc/apt/sources.list.d/ubuntu.sources <<'EOF'
 Types: deb
 URIs: http://mirrors.aliyun.com/ubuntu/
-Suites: noble noble-updates noble-backports
+Suites: jammy jammy-updates jammy-backports
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
 Types: deb
 URIs: http://mirrors.aliyun.com/ubuntu/
-Suites: noble-security
+Suites: jammy-security
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 EOF
@@ -46,7 +46,7 @@ sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg \
   | sudo gpg --batch --yes --dearmor -o /etc/apt/keyrings/docker.gpg
 
-echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://mirrors.aliyun.com/docker-ce/linux/ubuntu noble stable" \
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://mirrors.aliyun.com/docker-ce/linux/ubuntu jammy stable" \
   | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
